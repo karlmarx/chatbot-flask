@@ -6,17 +6,25 @@ import re
 import random
 
 app = Flask(__name__)
-bot = ChatBot('KarlMarx', storage_adapter="chatterbot.storage.SQLStorageAdapter")
-trainer = ListTrainer(bot)
+bot = ChatBot('KarlMarx', storage_adapter="chatterbot.storage.SQLStorageAdapter", logic_adapters=[
+        'chatterbot.logic.BestMatch',
+        'chatterbot.logic.MathematicalEvaluation',
+        'chatterbot.logic.TimeLogicAdapter'
+    ])
+# trainer = ListTrainer(bot)
 # quotes = [re.findall(r'\d\.\s\“(.+)\”\s', line) for line in open('quotes_to_parse.txt')]
 with open('quotes_to_parse.txt') as f:
     quotes = re.findall(r'\d\.\s\“(.+)\”\s', f.read())
+# with open('transitional')
 
 # trainer.train(['What is your name?', 'My name is KarlMarx'])
 # trainer.train(['Who are you?', 'I am a communist bot.'])
 
 c_trainer = ChatterBotCorpusTrainer(bot, show_training_progress=False)
-c_trainer.train("chatterbot.corpus.english")
+
+c_trainer.train(
+    "chatterbot.corpus.english"
+)
 
 @app.route('/')
 def index():
