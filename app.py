@@ -1,19 +1,62 @@
+from logging.handlers import RotatingFileHandler
+
 from flask import Flask, request, render_template
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 from chatterbot.trainers import ChatterBotCorpusTrainer
 import re
-import logging
-import random
+from logging.config import dictConfig
+import random, logging
+
+from logging.config import dictConfig
+
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s.%(funcName)s Line %(lineno)s: %(message)s',
+    }},
+    'handlers': {
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': 'logs/admin.log',
+            'formatter': 'default',
+            'maxBytes': 10000,
+            'backupCount': 10,
+        },
+        'console': {
+            # 'level': 'INFO',
+            'formatter': 'default',
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',  # Default is stderr
+        },
+        'critical_mail_handler': {
+            'level': 'CRITICAL',
+            'formatter': 'default',
+            'class': 'logging.handlers.SMTPHandler',
+            'mailhost': ('mail.karlmarxindustries.com', 26),
+            'fromaddr': 'marxbot@karlmarxindustries.com',
+            'toaddrs': ['5042021062karlmarx@gmail.com'],
+            'credentials': ('marxbot@karlmarxindustries.com', 'LoggingHandler'),
+            'subject': 'Critical error with application name'
+        }
+    },
+    'root': {
+        'level': 'DEBUG',
+        'handlers': ['file', 'console', 'critical_mail_handler']
+    }
+
+})
 
 app = Flask(__name__)
 app.config["DEBUG"] = True
-logging.basicConfig(level=logging.INFO, format='%(asctime)s =%(levelname)s - %(message)s', handlers=[
-    logging.FileHandler("log.log")
-])
+
+# logging.basicConfig(level=logging.INFO, format=, handlers=[
+#     logging.FileHandler("log.log")
+# ])
+
 bot = ChatBot('KarlMarx', storage_adapter="chatterbot.storage.SQLStorageAdapter", logic_adapters=[
-        'chatterbot.logic.BestMatch'],
-    trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
+    'chatterbot.logic.BestMatch'],
+              trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
 # trainer = ListTrainer(bot)
 with open('quotes_to_parse.txt') as f:
     quotes = re.findall(r'\d\.\s\“(.+)\”\s', f.read())
@@ -51,5 +94,21 @@ def get_response():
     app.logger.info(f"FORMATTED RESPONSE: {final_response}")
     return final_response
 
+
+@app.route("/error")
+def error():
+    app.logger.critical('testing')
+    return "ok", 200
+
+
 if __name__ == '__main__':
+    # handler = RotatingFileHandler('error.log', maxBytes=1000, backupCount=20)
+    # formatter = logging.Formatter('%(asctime)s [%(levelname)s:%(lineno)d] %(name)s: %(message)s')
+    # handler.setFormatter(formatter)
+    # handler.setLevel(logging.DEBUG)
+    # app.logger.addHandler(handler)
+    # log = logging.getLogger('werkzeug')
+    # log.setLevel(logging.DEBUG)
+    # log.addHandler(handler)
+    #
     app.run()
