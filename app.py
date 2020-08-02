@@ -12,12 +12,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s =%(levelname)s - %(m
     logging.FileHandler("log.log")
 ])
 bot = ChatBot('KarlMarx', storage_adapter="chatterbot.storage.SQLStorageAdapter", logic_adapters=[
-        'chatterbot.logic.BestMatch',
-        'chatterbot.logic.MathematicalEvaluation',
-        'chatterbot.logic.TimeLogicAdapter'
-    ])
+        'chatterbot.logic.BestMatch'],
+    trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
 # trainer = ListTrainer(bot)
-# quotes = [re.findall(r'\d\.\s\“(.+)\”\s', line) for line in open('quotes_to_parse.txt')]
 with open('quotes_to_parse.txt') as f:
     quotes = re.findall(r'\d\.\s\“(.+)\”\s', f.read())
 with open('transitional_phrases.txt') as f:
