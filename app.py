@@ -1,3 +1,4 @@
+import os
 from logging.handlers import RotatingFileHandler
 
 from flask import Flask, request, render_template
@@ -53,10 +54,16 @@ app.config["DEBUG"] = True
 # logging.basicConfig(level=logging.INFO, format=, handlers=[
 #     logging.FileHandler("log.log")
 # ])
+db_user = os.environ["DB_USER"]
+db_pass = os.environ["DB_PASS"]
+db_name = os.environ["DB_NAME"]
+db_host = os.environ["DB_HOST"]
 
-bot = ChatBot('KarlMarx', storage_adapter="chatterbot.storage.SQLStorageAdapter", logic_adapters=[
+db = f"mongodb+srv://{db_user}:{db_pass}@{db_host}/{db_name}?retryWrites=true&w=majority"
+bot = ChatBot('KarlMarx', storage_adapter="chatterbot.storage.MongoDatabaseAdapter", logic_adapters=[
     'chatterbot.logic.BestMatch'],
-              trainer='chatterbot.trainers.ChatterBotCorpusTrainer')
+              # trainer='chatterbot.trainers.ChatterBotCorpusTrainer',
+              database_uri=db)
 # trainer = ListTrainer(bot)
 with open('quotes_to_parse.txt') as f:
     quotes = re.findall(r'\d\.\s\“(.+)\”\s', f.read())
