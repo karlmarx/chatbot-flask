@@ -110,14 +110,18 @@ def error():
     return "ok", 200
 
 
+# if __name__ == '__main__':
+#     # handler = RotatingFileHandler('error.log', maxBytes=1000, backupCount=20)
+#     # formatter = logging.Formatter('%(asctime)s [%(levelname)s:%(lineno)d] %(name)s: %(message)s')
+#     # handler.setFormatter(formatter)
+#     # handler.setLevel(logging.DEBUG)
+#     # app.logger.addHandler(handler)
+#     # log = logging.getLogger('werkzeug')
+#     # log.setLevel(logging.DEBUG)
+#     # log.addHandler(handler)
+#     #
+#     app.run()
+
+port = int(os.environ.get('PORT', 8080))
 if __name__ == '__main__':
-    # handler = RotatingFileHandler('error.log', maxBytes=1000, backupCount=20)
-    # formatter = logging.Formatter('%(asctime)s [%(levelname)s:%(lineno)d] %(name)s: %(message)s')
-    # handler.setFormatter(formatter)
-    # handler.setLevel(logging.DEBUG)
-    # app.logger.addHandler(handler)
-    # log = logging.getLogger('werkzeug')
-    # log.setLevel(logging.DEBUG)
-    # log.addHandler(handler)
-    #
-    app.run()
+    app.run(threaded=True, host='0.0.0.0', port=port)
