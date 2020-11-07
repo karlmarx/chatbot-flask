@@ -70,18 +70,20 @@ with open('quotes_to_parse.txt') as f:
 with open('transitional_phrases.txt') as f:
     transitions = f.readlines()
 
+
 # trainer.train(['What is your name?', 'My name is KarlMarx'])
 # trainer.train(['Who are you?', 'I am a communist bot.'])
 
-c_trainer = ChatterBotCorpusTrainer(bot, show_training_progress=False)
-
-c_trainer.train(
-    "chatterbot.corpus.english"
-)
+# c_trainer = ChatterBotCorpusTrainer(bot, show_training_progress=False)
+#
+# c_trainer.train(
+#     "chatterbot.corpus.english"
+# )
 
 @app.route('/')
 def index():
     return render_template("index.html")
+
 
 @app.route("/get")
 def get_response():
