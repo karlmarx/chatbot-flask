@@ -11,45 +11,45 @@ import random, logging
 
 from logging.config import dictConfig
 
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s.%(funcName)s Line %(lineno)s: %(message)s',
-    }},
-    'handlers': {
-        'file': {
-            'class': 'logging.handlers.RotatingFileHandler',
-            'filename': 'logs/admin.log',
-            'formatter': 'default',
-            'maxBytes': 10000,
-            'backupCount': 10,
-        },
-        'console': {
-            # 'level': 'INFO',
-            'formatter': 'default',
-            'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',  # Default is stderr
-        },
-        'critical_mail_handler': {
-            'level': 'CRITICAL',
-            'formatter': 'default',
-            'class': 'logging.handlers.SMTPHandler',
-            'mailhost': ('mail.karlmarxindustries.com', 26),
-            'fromaddr': 'marxbot@karlmarxindustries.com',
-            'toaddrs': ['5042021062karlmarx@gmail.com'],
-            'credentials': ('marxbot@karlmarxindustries.com', 'LoggingHandler'),
-            'subject': 'Critical error with application name'
-        }
-    },
-    'root': {
-        'level': 'DEBUG',
-        'handlers': ['file', 'console', 'critical_mail_handler']
-    }
-
-})
+# dictConfig({
+#     'version': 1,
+#     'formatters': {'default': {
+#         'format': '[%(asctime)s] %(levelname)s in %(module)s.%(funcName)s Line %(lineno)s: %(message)s',
+#     }},
+#     'handlers': {
+#         'file': {
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': 'logs/admin.log',
+#             'formatter': 'default',
+#             'maxBytes': 10000,
+#             'backupCount': 10,
+#         },
+#         'console': {
+#             # 'level': 'INFO',
+#             'formatter': 'default',
+#             'class': 'logging.StreamHandler',
+#             'stream': 'ext://sys.stdout',  # Default is stderr
+#         },
+#         'critical_mail_handler': {
+#             'level': 'CRITICAL',
+#             'formatter': 'default',
+#             'class': 'logging.handlers.SMTPHandler',
+#             'mailhost': ('mail.karlmarxindustries.com', 26),
+#             'fromaddr': 'marxbot@karlmarxindustries.com',
+#             'toaddrs': ['5042021062karlmarx@gmail.com'],
+#             'credentials': ('marxbot@karlmarxindustries.com', 'LoggingHandler'),
+#             'subject': 'Critical error with application name'
+#         }
+#     },
+#     'root': {
+#         'level': 'DEBUG',
+#         'handlers': ['file', 'console', 'critical_mail_handler']
+#     }
+#
+# })
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
+# app.config["DEBUG"] = True
 
 # logging.basicConfig(level=logging.INFO, format=, handlers=[
 #     logging.FileHandler("log.log")
