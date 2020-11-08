@@ -1,6 +1,7 @@
 import os
 from logging.handlers import RotatingFileHandler
 
+import google.cloud.logging
 from flask import Flask, request, render_template
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
@@ -8,45 +9,14 @@ from chatterbot.trainers import ChatterBotCorpusTrainer
 import re
 from logging.config import dictConfig
 import random, logging
+from google.cloud.logging.handlers import CloudLoggingHandler
 
 from logging.config import dictConfig
 
-# dictConfig({
-#     'version': 1,
-#     'formatters': {'default': {
-#         'format': '[%(asctime)s] %(levelname)s in %(module)s.%(funcName)s Line %(lineno)s: %(message)s',
-#     }},
-#     'handlers': {
-#         'file': {
-#             'class': 'logging.handlers.RotatingFileHandler',
-#             'filename': 'logs/admin.log',
-#             'formatter': 'default',
-#             'maxBytes': 10000,
-#             'backupCount': 10,
-#         },
-#         'console': {
-#             # 'level': 'INFO',
-#             'formatter': 'default',
-#             'class': 'logging.StreamHandler',
-#             'stream': 'ext://sys.stdout',  # Default is stderr
-#         },
-#         'critical_mail_handler': {
-#             'level': 'CRITICAL',
-#             'formatter': 'default',
-#             'class': 'logging.handlers.SMTPHandler',
-#             'mailhost': ('mail.karlmarxindustries.com', 26),
-#             'fromaddr': 'marxbot@karlmarxindustries.com',
-#             'toaddrs': ['5042021062karlmarx@gmail.com'],
-#             'credentials': ('marxbot@karlmarxindustries.com', 'LoggingHandler'),
-#             'subject': 'Critical error with application name'
-#         }
-#     },
-#     'root': {
-#         'level': 'DEBUG',
-#         'handlers': ['file', 'console', 'critical_mail_handler']
-#     }
-#
-# })
+client = google.cloud.logging.Client()
+handler = CloudLoggingHandler(client)
+cloud_logger = logging.getLogger()
+cloud_logger.addHandler(handler)
 
 app = Flask(__name__)
 # app.config["DEBUG"] = True
@@ -89,7 +59,7 @@ def index():
 def get_response():
     user_input = request.args.get('msg')
     app.logger.info(f"MSG RECEIVED: {user_input} ")
-
+    cloud_logger.info(f"test MSG RECEIVED: {user_input} ")
     transition = random.choice(transitions)
     random_quote = random.choice(quotes).strip()
     if not (re.match('^I\s', random_quote)):
